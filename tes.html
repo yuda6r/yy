@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kuis Interaktif 50 Soal</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 2rem;
+      background-color: #f0f8ff;
+      color: #333;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    .question {
+      background-color: #fff;
+      padding: 1rem;
+      margin: 1rem auto;
+      border-radius: 12px;
+      max-width: 700px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .options button {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 0.5rem 0;
+      font-size: 1rem;
+      background-color: #e7e7e7;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .options button:hover {
+      background-color: #d0d0d0;
+    }
+    .correct {
+      background-color: #a5d6a7 !important;
+    }
+    .wrong {
+      background-color: #ef9a9a !important;
+    }
+    #timer {
+      font-size: 1.3rem;
+      text-align: center;
+      color: #c62828;
+      margin-bottom: 1rem;
+    }
+    #start-form {
+      background: #ffffff;
+      padding: 2rem;
+      max-width: 500px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    #start-form input {
+      display: block;
+      width: 90%;
+      margin: 0.5rem auto;
+      padding: 0.7rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    #start-form button {
+      padding: 0.8rem 1.5rem;
+      background-color: #4caf50;
+      color: white;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #start-form button:hover {
+      background-color: #388e3c;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>latihan tes beruang pintar</h1>
+  <div id="start-form">
+    <h2>Silakan Masukkan Identitas Anda</h2>
+    <input type="text" id="nama" placeholder="Nama lengkap" required />
+    <input type="number" id="umur" placeholder="Umur" required />
+    <button onclick="mulaiKuis()">Mulai Kuis</button>
+  </div>
+
+  <div id="timer" style="display:none;"></div>
+  <div id="quiz"></div>
+
+  <script>
+    const quizData = [
+      { q: "Ekspedisi pertama Belanda ke Indonesia dipimpin oleh…", options: ["Jan Pieterszoon Coen", "Cornelis de Houtman", "Daendels", "Van den Bosch"], answer: 1 },
+      { q: "Tujuan utama kedatangan bangsa Belanda ke Indonesia adalah…", options: ["Menyebarkan agama Kristen", "Mencari budak", "Menguasai jalur rempah-rempah", "Mendirikan kerajaan"], answer: 2 },
+      { q: "Cornelis de Houtman pertama kali mendarat di…", options: ["Ambon", "Batavia", "Malaka", "Banten"], answer: 3 },
+      { q: "Bangsa Eropa mencari rempah-rempah karena…", options: ["Dijadikan alat tukar", "Dipakai untuk senjata", "Dijual kembali di Afrika", "Sangat bernilai tinggi di Eropa"], answer: 3 },
+      { q: "Penyebab gagalnya ekspedisi Cornelis de Houtman adalah…", options: ["Perang dengan Inggris", "Kekurangan perbekalan", "Sikap kasar terhadap penduduk lokal", "Kapal karam di Laut Banda"], answer: 2 },
+      { q: "VOC dibentuk pada tahun…", options: ["1596", "1602", "1619", "1799"], answer: 1 },
+      { q: "Tujuan pembentukan VOC adalah untuk…", options: ["Menyebarkan budaya Belanda", "Menyatukan kerajaan lokal", "Memonopoli perdagangan dan menghindari persaingan antar pedagang Belanda", "Mengembangkan pertanian di Indonesia"], answer: 2 },
+      { q: "VOC mendapatkan hak istimewa berikut, kecuali…", options: ["Membuat perjanjian dengan kerajaan lokal", "Mendirikan sekolah", "Membentuk tentara", "Memonopoli perdagangan"], answer: 1 },
+      { q: "VOC pertama kali membangun pusat kekuasaannya di…", options: ["Ambon", "Banda", "Batavia", "Ternate"], answer: 2 },
+      { q: "Kota Batavia sebelumnya bernama…", options: ["Sunda Kelapa", "Jayakarta", "Banten", "Demak"], answer: 1 },
+      { q: "Politik yang digunakan VOC untuk memecah kerajaan lokal disebut…", options: ["Pax Neerlandica", "Devide et Impera", "Revolusi Dagang", "Cultuurstelsel"], answer: 1 },
+      { q: "Tujuan pelayaran hongi oleh VOC adalah…", options: ["Menjaga laut dari bajak laut", "Menebar agama Kristen", "Mengawasi perdagangan ilegal dan membakar tanaman rempah rakyat", "Menyalurkan logistik untuk perang"], answer: 2 },
+      { q: "VOC mengalami kebangkrutan pada tahun…", options: ["1602", "1700", "1799", "1942"], answer: 2 },
+      { q: "Setelah VOC bubar, wilayah jajahan diambil alih oleh…", options: ["Inggris", "Spanyol", "Perancis", "Pemerintah Belanda"], answer: 3 },
+      { q: "Masa kekuasaan Inggris di Indonesia berlangsung dari…", options: ["1801–1808", "1811–1816", "1820–1830", "1830–1845"], answer: 1 },
+      { q: "Sistem Tanam Paksa diberlakukan oleh Belanda pada tahun…", options: ["1808", "1816", "1830", "1850"], answer: 2 },
+      { q: "Tujuan sistem Tanam Paksa adalah…", options: ["Mensejahterakan petani lokal", "Menambah pendapatan pemerintah Belanda", "Mengurangi pengangguran", "Membebaskan rakyat dari pajak"], answer: 1 },
+      { q: "Salah satu perlawanan terbesar terhadap Belanda di Jawa adalah…", options: ["Perang Aceh", "Perang Padri", "Perang Diponegoro", "Perang Bali"], answer: 2 },
+      { q: "Perang Aceh berlangsung dari tahun…", options: ["1825–1830", "1821–1837", "1873–1904", "1908–1942"], answer: 2 },
+      { q: "Salah satu dampak penjajahan Belanda bagi rakyat Indonesia adalah…", options: ["Meningkatnya kesejahteraan", "Pendidikan gratis", "Eksploitasi sumber daya dan kerja paksa", "Kemandirian ekonomi"], answer: 2 },
+      { q: "Organisasi modern pertama yang lahir di masa pergerakan nasional adalah…", options: ["Sarekat Islam", "Budi Utomo", "PKI", "Indische Partij"], answer: 1 },
+      { q: "Budi Utomo didirikan pada tahun…", options: ["1905", "1907", "1908", "1912"], answer: 2 },
+      { q: "Setelah Jepang menyerah pada tahun 1945, Belanda kembali datang untuk…", options: ["Membantu Indonesia", "Mengakui kemerdekaan", "Menjajah kembali", "Menetap secara damai"], answer: 2 },
+      { q: "Indonesia memproklamasikan kemerdekaan pada…", options: ["27 Desember 1949", "1 Juni 1945", "17 Agustus 1945", "10 November 1945"], answer: 2 },
+      { q: "Belanda akhirnya mengakui kedaulatan Indonesia melalui KMB pada…", options: ["17 Agustus 1945", "27 Desember 1949", "28 Oktober 1928", "5 Juli 1959"], answer: 1 },
+
+      { q: "Sinonim kata ‘abstrak’ adalah...", options: ["Nyata", "Konkrit", "Tidak nyata", "Terlihat"], answer: 2 },
+      { q: "Sinonim dari kata ‘konflik’ adalah...", options: ["Perang", "Masalah", "Persatuan", "Kerjasama"], answer: 1 },
+      { q: "Sinonim ‘anarkis’ adalah...", options: ["Kacau", "Tertib", "Damai", "Tenang"], answer: 0 },
+      { q: "Sinonim ‘ekspansi’ adalah...", options: ["Penyusutan", "Pembatasan", "Perluasan", "Pengurangan"], answer: 2 },
+      { q: "Sinonim ‘metode’ adalah...", options: ["Sistem", "Alat", "Rencana", "Strategi"], answer: 0 },
+      { q: "Sinonim dari ‘prioritas’ adalah...", options: ["Alternatif", "Pilihan", "Utama", "Cadangan"], answer: 2 },
+      { q: "Sinonim dari ‘defisit’ adalah...", options: ["Keuntungan", "Surplus", "Kekurangan", "Modal"], answer: 2 },
+      { q: "Sinonim ‘relevan’ adalah...", options: ["Tidak penting", "Tidak nyambung", "Berkaitan", "Melenceng"], answer: 2 },
+      { q: "Sinonim dari kata ‘ambisi’ adalah...", options: ["Harapan", "Cita-cita", "Rasa takut", "Kekhawatiran"], answer: 1 },
+      { q: "Sinonim kata ‘toleransi’ adalah...", options: ["Egois", "Pengertian", "Paksaan", "Keangkuhan"], answer: 1 },
+
+      { q: "Antonim dari kata ‘optimis’ adalah...", options: ["Pesimis", "Senang", "Ragu", "Takut"], answer: 0 },
+      { q: "Antonim dari ‘agresif’ adalah...", options: ["Pasif", "Kuat", "Cepat", "Marah"], answer: 0 },
+      { q: "Antonim dari ‘absen’ adalah...", options: ["Bolos", "Izin", "Hadir", "Pergi"], answer: 2 },
+      { q: "Antonim ‘musim kemarau’ adalah...", options: ["Musim salju", "Musim gugur", "Musim semi", "Musim hujan"], answer: 3 },
+      { q: "Antonim ‘progresif’ adalah...", options: ["Maju", "Teratur", "Konservatif", "Aktif"], answer: 2 },
+
+      { q: "Jika f(x) = 3x + 2, maka nilai f(4) adalah...", options: ["12", "14", "10", "8"], answer: 1 },
+      { q: "Diketahui barisan aritmetika dengan suku pertama 5 dan beda 3. Maka suku ke-10 adalah...", options: ["30", "31", "32", "33"], answer: 1 },
+      { q: "Turunan dari fungsi f(x) = x^2 + 3x adalah...", options: ["2x + 3", "x + 3", "x^2 + 3", "2x"], answer: 0 },
+      { q: "Jika log x = 3, maka nilai x adalah...", options: ["3", "10", "1000", "30"], answer: 2 },
+      { q: "Rumus luas permukaan bola adalah...", options: ["4πr^2", "(4/3)πr^3", "2πr^2", "πr^2"], answer: 0 },
+      { q: "Hasil dari (2x - 3)^2 adalah...", options: ["4x^2 - 6x + 9", "4x^2 - 12x + 9", "4x^2 + 9", "4x^2 - 9"], answer: 1 },
+      { q: "Jika A = [[2,1],[3,4]], maka determinan A adalah...", options: ["8", "5", "10", "2"], answer: 1 },
+      { q: "Integral dari ∫x dx adalah...", options: ["x^2", "(1/2)x^2 + C", "2x + C", "x + C"], answer: 1 },
+      { q: "Jika cos θ = 1/2, maka nilai θ = ...", options: ["30°", "60°", "45°", "90°"], answer: 0 },
+    ];
+
+    let score = 0, current = 0;
+    let namaPengguna = "", umurPengguna = "";
+
+    function mulaiKuis() {
+      const nama = document.getElementById("nama").value.trim();
+      const umur = document.getElementById("umur").value.trim();
+      if (!nama || !umur) {
+        alert("Mohon lengkapi nama dan umur.");
+        return;
+      }
+      namaPengguna = nama;
+      umurPengguna = umur;
+
+      document.getElementById("start-form").style.display = "none";
+      document.getElementById("timer").style.display = "block";
+      renderSoal();
+      startTimer(50 * 60);
+    }
+
+    function renderSoal() {
+      const quiz = document.getElementById("quiz");
+      quiz.innerHTML = "";
+      if (current >= quizData.length) {
+        tampilkanHasil();
+        return;
+      }
+
+      const soal = quizData[current];
+      const soalDiv = document.createElement("div");
+      soalDiv.className = "question";
+      soalDiv.innerHTML = `<strong>Soal ${current + 1}</strong><p>${soal.q}</p>`;
+
+      const opsiDiv = document.createElement("div");
+      opsiDiv.className = "options";
+      soal.options.forEach((opt, i) => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.onclick = () => {
+          if (i === soal.answer) {
+            btn.classList.add("correct");
+            score++;
+          } else {
+            btn.classList.add("wrong");
+          }
+          setTimeout(() => {
+            current++;
+            renderSoal();
+          }, 600);
+        };
+        opsiDiv.appendChild(btn);
+      });
+
+      soalDiv.appendChild(opsiDiv);
+      quiz.appendChild(soalDiv);
+    }
+
+    function tampilkanHasil() {
+      const tanggal = new Date().toLocaleString();
+      const hasilWindow = window.open("", "_blank");
+      const status = score >= 35 ? "✅ LULUS" : "❌ TIDAK LULUS";
+      hasilWindow.document.write(`
+        <html>
+        <head>
+          <title>Hasil Kuis</title>
+          <style>
+            body { font-family: sans-serif; padding: 2rem; background: #f5f5f5; }
+            .hasil { background: white; padding: 2rem; max-width: 500px; margin: auto; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+            h2 { text-align: center; color: #4caf50; }
+            p { font-size: 1.1rem; }
+          </style>
+        </head>
+        <body>
+          <div class="hasil">
+            <h2>Hasil Kuis</h2>
+            <p><strong>Nama:</strong> ${namaPengguna}</p>
+            <p><strong>Umur:</strong> ${umurPengguna} tahun</p>
+            <p><strong>Tanggal:</strong> ${tanggal}</p>
+            <p><strong>Skor:</strong> ${score} / ${quizData.length}</p>
+            <p><strong>Status:</strong> <span>${status}</span></p>
+          </div>
+        </body>
+        </html>
+      `);
+      hasilWindow.document.close();
+    }
+
+    function startTimer(duration) {
+      const timerEl = document.getElementById("timer");
+      let timer = duration;
+      const interval = setInterval(() => {
+        const m = Math.floor(timer / 60);
+        const s = timer % 60;
+        timerEl.textContent = `Waktu Tersisa: ${m}:${s < 10 ? "0" : ""}${s}`;
+        if (--timer < 0) {
+          clearInterval(interval);
+          tampilkanHasil();
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
+
+
+
